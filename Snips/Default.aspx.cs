@@ -9,6 +9,7 @@ using System.Net;
 using System.IO;
 using DeviceMagicAPI;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace DeviceMagicAPI
 {
@@ -57,12 +58,12 @@ namespace DeviceMagicAPI
 
             StreamReader reader = new StreamReader(s, Encoding.UTF8);
             string jsonData = reader.ReadToEnd();
-
+            dynamic o = JsonConvert.DeserializeObject(jsonData);
             
 
-            JObject o = JObject.Parse(jsonData);
+            JObject json = JObject.Parse(o);
 
-            txtData.Text = o.ToString();
+            txtData.Text = json.ToString();
 
 
         }
