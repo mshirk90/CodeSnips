@@ -1,0 +1,105 @@
+using System;
+using System.Net;
+using System.IO;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using MongoDB.Bson;
+using System.Collections.Generic;
+using MongoDB;
+using MongoDB.Driver;
+using System.Collections;
+
+public partial class _Default : System.Web.UI.Page
+{
+    Mongo m = new Mongo();
+    JsonTranslator Translator = new JsonTranslator();
+    DeviceMagicAPI DVAPI = new DeviceMagicAPI();
+
+    public void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    public void btnFormList_Click(object sender, EventArgs e)
+    {
+        DVAPI = new DeviceMagicAPI();
+        List<JsonTranslator.Forms> Forms = DVAPI.GetList();
+
+        dmGridView.DataSource = Forms;
+        dmGridView.DataBind();
+    }
+
+
+
+
+    protected void btnForm_Click(object sender, EventArgs e)
+    {
+        DVAPI = new DeviceMagicAPI();
+        List<JsonTranslator.FormData> Forms = DVAPI.GetForm(txtQuery.Text);
+
+        dmGridView.DataSource = Forms;
+        dmGridView.DataBind();
+
+    }
+
+
+    protected void btnTEST_Click1(object sender, EventArgs e)
+    {
+        m = new Mongo();
+
+        BsonDocument document = new BsonDocument
+                {
+                    { "name", "MongoDB" },
+                    { "type", "Database" },
+                    { "count", 1 },
+                    { "info", new BsonDocument
+                        {
+                            { "x", 203 },
+                            { "y", 102 }
+                        }}
+                };
+
+        m.InsertSingleRecord(document);
+    }
+
+    protected void btnTEST2_Click(object sender, EventArgs e)
+    {
+        m = new Mongo();
+        var settings = new MongoClientSettings { ReplicaSetName = "rs0" };
+        var client = new MongoClient(settings);
+        string jdata = string.Empty;
+
+        DVAPI = new DeviceMagicAPI();
+        List<JsonTranslator.Forms> Forms = DVAPI.GetList();
+        BsonDocument document = new BsonDocument();
+        BsonArray barray = new BsonArray();
+        document = Forms.ToBsonDocument();
+        jdata = JsonConvert.SerializeObject(Forms);
+
+        //catch
+        //{
+        //    var array = new BsonArray();
+        //    foreach (var item in Forms)
+        //    {
+        //        array.Add(item.ToBson());
+        //    }
+
+        //    return array(IConvertibleToBsonDocument);
+        //}
+        m.InsertSingleRecord(jdata.ToBsonDocument());
+    }
+
+    //public static BsonArray ToBsonDocumentArray(this IEnumerable list, object sender)
+    //{
+    //    List<JsonTranslator.Forms> Forms = f
+
+    //    var array = new BsonArray();
+    //    foreach (var item in Forms)
+    //    {
+    //        array.Add(item.ToBson());
+    //    }
+    //    return array;
+    //}
+
+}
