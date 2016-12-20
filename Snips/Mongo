@@ -1,0 +1,61 @@
+using MongoDB.Bson;
+using MongoDB.Driver;
+
+public class Mongo
+{
+
+    private IMongoCollection<BsonDocument> Connect()
+    {
+        MongoClient client = new MongoClient("mongodb://localhost:27017"); //Host
+        IMongoDatabase database = client.GetDatabase("MasteryPrep"); //Database
+        return database.GetCollection<BsonDocument>("DeviceMagic"); //Table
+    }
+
+    public void InsertSingleRecord(BsonDocument document)
+    {
+        IMongoCollection<BsonDocument> Collection = Connect();
+        Collection.InsertOne(document);
+    }
+
+    public void InsertMultipleRecords()
+    {
+
+    }
+
+    //BsonDocument document = new BsonDocument
+    //        {
+    //            { "name", "MongoDB" },
+    //            { "type", "Database" },
+    //            { "count", 1 },
+    //            { "info", new BsonDocument
+    //                {
+    //                    { "x", 203 },
+    //                    { "y", 102 }
+    //                }}
+    //        };
+
+    //collection.InsertOne(document);
+
+    //    document = new BsonDocument
+    //        {
+    //            { "name", "MongoDB" },
+    //            { "type", "Database" },
+    //            { "count", 1 },
+    //            { "info", new BsonDocument
+    //                {
+    //                    { "x", 203 },
+    //                    { "y", 102 },
+    //                    { "a", 102 },
+    //                    { "aa", 102 },
+    //                    { "aaa", 102 },
+    //                    { "aaaa", 102 },
+    //                    { "aaaaa", 102 },
+    //                    { "aaaaaa", 102 }
+    //                }}
+    //        };
+
+    //    collection.InsertOne(document);
+
+    //    var documents = Enumerable.Range(0, 100).Select(i => new BsonDocument("counter", i));
+
+}
