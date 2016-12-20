@@ -1,0 +1,73 @@
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Web.UI.WebControls;
+
+public class JsonTranslator
+{
+    [JsonProperty("children")]
+    public List<FormData> children { get; set; }
+
+    [JsonProperty("forms")]
+    public List<Forms> forms { get; set; }
+
+
+    public class Forms
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("namespace")]
+        public string Namespace { get; set; }
+        [JsonProperty("version")]
+        public decimal Version { get; set; }
+        [JsonProperty("description")]
+        public string Description { get; set; }
+        [JsonProperty("group")]
+        public string Group { get; set; }
+    }
+
+
+    public class FormData
+    {
+
+        [JsonProperty("identifier")]
+        public string Identifier { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("autoidentifier")]
+        public bool AutoIdentifier { get; set; }
+
+        [JsonProperty("options")]
+        public List<DropDownList> Options { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        [JsonProperty("hint")]
+        public string Hint { get; set; }
+
+        [JsonProperty("required_rule")]
+        public string R_Rule { get; set; }
+
+        [JsonProperty("text")]
+        public string Text { get; set; }
+
+        [JsonProperty("visible_rule")]
+        public string V_Rule { get; set; }
+
+        [JsonProperty("visible_expr")]
+        public string Visible_Expression { get; set; }
+
+        [JsonProperty("customOptionIdentifier")]
+        public bool OptionIdentifier { get; set; }
+
+        [JsonProperty("auto_resolve")]
+        public bool Auto_Resolve { get; set; }
+
+        [JsonProperty("multiple")]
+        public bool Multiple { get; set; }
+    }
+}
