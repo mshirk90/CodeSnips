@@ -1,0 +1,40 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Text;
+
+public class DeviceMagicAPI
+{
+    static string BASE_URL = "https://www.devicemagic.com/organizations/104196";
+    static string USER_NAME = "3vbYNVjphf1_5wJeFsHt";
+    static string PASSWORD = "x";
+
+    private JsonTranslator BuildConnection(string APIUrl)
+    {
+        HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(APIUrl);
+        string authInfo = USER_NAME + ":" + PASSWORD;
+        authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+        req.Headers["Authorization"] = "Basic " + authInfo;
+
+        HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+        Stream sResponse = response.GetResponseStream();
+        string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
+        JObject jsonO = JObject.Parse(json);
+        return JsonConvert.DeserializeObject<JsonTranslator>(json);
+    }
+
+    public List<JsonTranslator.Forms> GetList()
+    {
+        JsonTranslator Translator = BuildConnection(BASE_URL + "/forms.json");
+        return Translator.forms;
+    }
+
+    public List<JsonTranslator.FormData> GetForm(string FormID)
+    {
+        JsonTranslator Translator = BuildConnection("https://www.devicemagic.com/api/forms/" + FormID + "/device_magic_database.json");
+        return Translator.children;
+    }
+}
