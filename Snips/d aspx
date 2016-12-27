@@ -3,20 +3,23 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-    <asp:Button ID="btnFormList" runat="server" Text="Pull Form List" OnClick="btnFormList_Click" />
+   <script src="Scripts/angular.js"></script>
+     <asp:Button ID="btnFormList" runat="server" Text="Pull Form List" OnClick="btnFormList_Click" />
 
     <br />
     <br />
     <asp:TextBox ID="txtQuery" runat="server" Width="127px"></asp:TextBox>
     <asp:Button ID="btnForm" runat="server" OnClick="btnForm_Click" Text="Pull Form" />
 
-    <asp:Button ID="btnTEST" runat="server" Text="TEST" OnClick="btnTEST_Click1" />
+    <asp:Button ID="btnTEST" runat="server" Text="Pull Submission" OnClick="btnTEST_Click1" />
         
 
-    <asp:Button ID="btnTEST2" runat="server" Text="API TEST" OnClick="btnTEST2_Click" />
+    <asp:Button ID="btnTEST2" runat="server" Text="Refresh Database" OnClick="btnTEST2_Click" />
     <asp:DataGrid ID="dmGridView" runat="server" AutoGenerateColumns="true" Height="227px" Width="491px">
        
     </asp:DataGrid>
     <asp:Label ID="lblDeviceMagic" runat="server"></asp:Label>
+
+   
 </asp:Content>
 
