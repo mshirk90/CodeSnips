@@ -1,11 +1,63 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Data;
 using System.Web.UI.WebControls;
 
 public class JsonTranslator
 {
-    [JsonProperty("children")]
-    public List<FormData> children { get; set; }
+    //[JsonProperty("children")]
+    //public List<FormData> children { get; set; }
+
+    [JsonProperty("submissions")]
+    public List<FormData> Submissions { get; set; }
+
+
+
+    public class FormData
+    {
+
+        [JsonProperty("form")]
+        public List<FormInfo> Form { get; set; }
+        //[JsonProperty("metadata")]
+        //public string Metadata { get; set; }
+        [JsonProperty("submission")]
+        public List<SubmissionData> Submission { get; set; }
+
+    }
+
+    public class FormInfo
+    {
+
+        [JsonProperty("id")]
+        public int ID { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("version")]
+        public string Version { get; set; }
+
+    }
+
+    public class SubmissionData
+    {
+        [JsonProperty("What_was_completed_in_class_today_")]
+        public List<QuestionData> Agenda { get; set; }
+        [JsonProperty("Which_subject_did_you_teach_today_")]
+        public List<QuestionData> Subject { get; set; }
+        [JsonProperty("Which_Lesson_did_you_teach_today_")]
+        public List<QuestionData> Lesson { get; set; }
+  
+    }
+
+    public class QuestionData
+    {
+        [JsonProperty("value")]
+        public int Value { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }      
+    }
+
+    
+
 
     [JsonProperty("forms")]
     public List<Forms> forms { get; set; }
@@ -27,47 +79,27 @@ public class JsonTranslator
         public string Group { get; set; }
     }
 
-
-    public class FormData
+    public DataTable dtForms()
     {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("id");
+        dt.Columns.Add("name");
+        dt.Columns.Add("namespace");
+        dt.Columns.Add("version");
+        dt.Columns.Add("description");
+        dt.Columns.Add("group");
 
-        [JsonProperty("identifier")]
-        public string Identifier { get; set; }
-
-        [JsonProperty("title")]
-        public string Title { get; set; }
-
-        [JsonProperty("autoidentifier")]
-        public bool AutoIdentifier { get; set; }
-
-        [JsonProperty("options")]
-        public List<DropDownList> Options { get; set; }
-
-        [JsonProperty("type")]
-        public string Type { get; set; }
-
-        [JsonProperty("hint")]
-        public string Hint { get; set; }
-
-        [JsonProperty("required_rule")]
-        public string R_Rule { get; set; }
-
-        [JsonProperty("text")]
-        public string Text { get; set; }
-
-        [JsonProperty("visible_rule")]
-        public string V_Rule { get; set; }
-
-        [JsonProperty("visible_expr")]
-        public string Visible_Expression { get; set; }
-
-        [JsonProperty("customOptionIdentifier")]
-        public bool OptionIdentifier { get; set; }
-
-        [JsonProperty("auto_resolve")]
-        public bool Auto_Resolve { get; set; }
-
-        [JsonProperty("multiple")]
-        public bool Multiple { get; set; }
+        return dt;
     }
+
+    public DataTable dtFormsData()
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("form");
+        dt.Columns.Add("submission");
+        return dt;
+    }
+
+
+
 }
