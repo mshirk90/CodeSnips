@@ -1,384 +1,136 @@
-﻿using System;
+using System;
+using MongoDB.Bson;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Text;
+using MongoDB.Driver;
+using System.Data;
 using System.Net;
+using System.Text;
 using System.IO;
-using DeviceMagicAPI;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace DeviceMagicAPI
+public partial class _Default : System.Web.UI.Page
 {
-    public partial class _Default : Page
-    {
+    Mongo m = new Mongo();
+    JsonTranslator Translator = new JsonTranslator();
+    DeviceMagicAPI DVAPI = new DeviceMagicAPI();
+    //MongoExtension ME = new MongoExtension();
 
-        static string BASE_URL = "https://www.devicemagic.com/organizations/10";
-        static string USER_NAME = "3vbYNVjphf1_5wJeFsHt";
-        static string PASSWORD = "x";
+    public void Page_Load(object sender, EventArgs e)
+    {
+        IMongoCollection<BsonDocument> Collection = Connect();
+       
+        Collection.Database.DropCollection("DeviceMagic");
+        Collection.Database.CreateCollection("DeviceMagic");        
+    }
+
+    public void btnFormList_Click(object sender, EventArgs e)
+    {
+        DVAPI = new DeviceMagicAPI();
+        List<JsonTranslator.Forms> Forms = DVAPI.GetList();
+
+        dmGridView.DataSource = Forms;
+        dmGridView.DataBind();
+    }
+
+
+
+
+    protected void btnForm_Click(object sender, EventArgs e)
+    {
+        DVAPI = new DeviceMagicAPI();
+        List<JsonTranslator.FormData> Forms = DVAPI.GetForm(txtQuery.Text);
+
+        dmGridView.DataSource = Forms;
+                       dmGridView.DataBind();
+
+    }
+
+
+
+    
+
+
+    protected void btnTEST_Click1(object sender, EventArgs e)
+    {
+        string BASE_URL = "https://www.devicemagic.com/api/forms/";
+        string USER_NAME = "3vbYNVjphf1_5wJeFsHt";
+        string PASSWORD = "x";
+        m = new Mongo();
+
+        HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + txtQuery.Text + "/device_magic_database.json");
+        string authInfo = USER_NAME + ":" + PASSWORD;
+        authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+        req.Headers["Authorization"] = "Basic " + authInfo;
+
+        HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+        Stream s = response.GetResponseStream();
+
+        string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
+        JObject jsonO = JObject.Parse(json);
+        //JsonConvert.DeserializeObject<JsonTranslator>(json);
+
+        dmGridView.DataSource = jsonO;
+        dmGridView.DataBind();
+        m.InsertSingleRecord(jsonO.ToBsonDocument());
+
+    }
+
+    protected void btnTEST2_Click(object sender, EventArgs e)
+    {
+        m = new Mongo();
+        //Grab all form data
+        DVAPI = new DeviceMagicAPI();
+        List<JsonTranslator.Forms> Forms = DVAPI.GetList();
+         
         
 
-        public void Page_Load(object sender, EventArgs e)
+
+        Translator = new JsonTranslator();
+        DataTable dtForms = Translator.dtForms();
+
+        // remove all documents in the "stickynotes" collection
+
+        //Loop through form data.  Put 'Exit Ticket' data into a datatable
+        foreach (JsonTranslator.Forms Form in Forms)
         {
 
-        }
 
-
-
-        public void Main(string[] args)
-        {
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + "/devices.xml");
-            string authInfo = USER_NAME + ":" + PASSWORD;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-            req.Headers["Authorization"] = "Basic " + authInfo;
-
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Stream s = response.GetResponseStream();
-
-            StreamReader reader = new StreamReader(s, Encoding.UTF8);
-            string content = reader.ReadToEnd();
-
-            Console.WriteLine(content);
-            Console.ReadLine();
-        }
-
-        public void btnText_Click(object sender, EventArgs e)
-        {
-
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + "/devices.json");
-            string authInfo = USER_NAME + ":" + PASSWORD;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-            req.Headers["Authorization"] = "Basic " + authInfo;
-
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Stream s = response.GetResponseStream();
-
-            StreamReader reader = new StreamReader(s, Encoding.UTF8);
-            string jsonData = reader.ReadToEnd();
-            dynamic o = JsonConvert.DeserializeObject(jsonData);
-            
-
-            JObject json = JObject.Parse(o);
-
-            txtData.Text = json.ToString();
-
-
-        }
-
-        public void btnLabel_Click(object sender, EventArgs e)
-        {
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + "/devices.xml");
-            string authInfo = USER_NAME + ":" + PASSWORD;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-            req.Headers["Authorization"] = "Basic " + authInfo;
-
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Stream s = response.GetResponseStream();
-
-            StreamReader reader = new StreamReader(s, Encoding.UTF8);
-            string content = reader.ReadToEnd();
-
-            Console.WriteLine(content);
-            Console.ReadLine();
-
-
-            lblData.Text = content;
-        }
-    }
-}
-
-
-
-
-
-
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Net;
-using System.IO;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using MagicDeviceApiTest;
-
-namespace MagicDeviceApiTest
-{
-    public partial class _Default : Page
-    {
-        static string BASE_URL = "https://www.devicemagic.com/organizations/10";
-        static string USER_NAME = "3vbYNVjphf1_5wJeFsHt";
-        static string PASSWORD = "x";
-
-        protected void Page_Load(object sender, EventArgs e, string[] args)
-        {
-
-        }
-
-
-
-        public void btnDeviceMagic_Click(object sender, EventArgs e)
-        {
-            try
+            if (Form.Description.Contains("Exit Ticket"))
             {
-                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + "/forms.json");
-                string authInfo = USER_NAME + ":" + PASSWORD;
-                authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-                req.Headers["Authorization"] = "Basic " + authInfo;
+                DataRow dr = dtForms.NewRow();
+                dr["id"] = Form.ID;
+                dr["name"] = Form.Name;
+                dr["namespace"] = Form.Namespace;
+                dr["version"] = Form.Version;
+                dr["description"] = Form.Description;
+                dr["group"] = Form.Group;
 
-                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-                Stream sResponse = response.GetResponseStream();
-                string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
-
-                lblDeviceMagic.Text = json.ToString();
-
-            }
-            catch (WebException wex)
-            {
-                //failed
-                Stream stream = wex.Response.GetResponseStream();
-                var resp = new System.IO.StreamReader(stream).ReadToEnd();
-
-                try
-                {
-                    dynamic obj = JsonConvert.DeserializeObject(resp);
-                    var messageFromServer = obj.error.message;
-                    lblDeviceMagic.Text = messageFromServer.ToString();
-                }
-                catch (Exception ex)
-                {
-
-                }
+                dtForms.Rows.Add(dr);
             }
         }
-
-
-
-
-
-        public static void Main(string[] args)
-        {
-            TextBox ta = new TextBox();
-
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + "/devices.xml");
-            string authInfo = USER_NAME + ":" + PASSWORD;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-            req.Headers["Authorization"] = "Basic " + authInfo;
-
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Stream s = response.GetResponseStream();
-
-            StreamReader reader = new StreamReader(s, Encoding.UTF8);
-            string content = reader.ReadToEnd();
-
-            Console.WriteLine(content);           
-            Console.ReadLine();
-
-
-        }
-
-    }
-}
-
-
-
-
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Net;
-using System.IO;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using MagicDeviceApiTest;
-using System.ComponentModel;
-
-namespace MagicDeviceApiTest
-{
-    public partial class _Default : Page
-    {
-        static string BASE_URL = "https://www.devicemagic.com/organizations/104196";
-        static string USER_NAME = "3vbYNVjphf1_5wJeFsHt";
-        static string PASSWORD = "x";
-
-        public void Page_Load(object sender, EventArgs e)
-        {
-            try
-            {
-
-
-                //lblDeviceMagic.Text = json.ToString();
-
-            }
-            catch (WebException wex)
-            {
-                //failed
-                Stream stream = wex.Response.GetResponseStream();
-                var resp = new System.IO.StreamReader(stream).ReadToEnd();
-
-                try
-                {
-                    dynamic obj = JsonConvert.DeserializeObject(resp);
-                    var messageFromServer = obj.error.message;
-                    lblDeviceMagic.Text = messageFromServer.ToString();
-                }
-                catch (Exception ex)
-                {
-                    lblDeviceMagic.Text = ex.Message;
-                }
-            }
-        }
-
-        public void btnFormList_Click(object sender, EventArgs e)
-        {
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + "/forms.json");
-            string authInfo = USER_NAME + ":" + PASSWORD;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-            req.Headers["Authorization"] = "Basic " + authInfo;
-
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Stream sResponse = response.GetResponseStream();
-            string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            JObject jsonO = JObject.Parse(json);
-            FormList forms = JsonConvert.DeserializeObject<FormList>(json);
-
-            dmGridView.DataSource = forms.forms;
-            dmGridView.DataBind();
-        }
-
-
-        //public void btnSelectID_Click(object sender, EventArgs e)
+        //Loop through form datatable, pull the submittion data and put into datatable
+        //foreach (DataRow row in dtForms.Rows)
         //{
-        //    string SelectedRow = string.Empty;
-        //    if (dmGridView.SelectedIndex != null)
-        //    {
-        //        dmGridView.SelectedIndex[1] = add
-        //    }
-
-        //    var index = Convert.ToInt32(dmGridView.SelectedIndex[0].Value);
-
-
-        //    HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + "/forms/" + btnSelectID_Click.dmGridView. + ".json");
-        //    string authInfo = USER_NAME + ":" + PASSWORD;
-        //    authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-        //    req.Headers["Authorization"] = "Basic " + authInfo;
-
-        //    HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-        //    Stream sResponse = response.GetResponseStream();
-        //    string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
-        //    JObject jsonO = JObject.Parse(json);
-        //    FormDataList forms = JsonConvert.DeserializeObject<FormDataList>(json);
-
-        //    dmGridView.DataSource = forms.children;
-        //    dmGridView.DataBind();
+        //    DVAPI.GetForm(row["id"].ToString());
         //}
 
-        protected void btnForm_Click(object sender, EventArgs e)
-        {
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + "/forms/" + txtQuery.Text + ".json");
-            string authInfo = USER_NAME + ":" + PASSWORD;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-            req.Headers["Authorization"] = "Basic " + authInfo;
-
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Stream sResponse = response.GetResponseStream();
-            string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            JObject jsonO = JObject.Parse(json);
-            FormDataList forms = JsonConvert.DeserializeObject<FormDataList>(json);
-
-            dmGridView.DataSource = forms.children;
-            dmGridView.DataBind();
-        }
-
-        public class Forms
-        {
-            [JsonProperty("id")]
-            public int ID { get; set; }
-            [JsonProperty("name")]
-            public string Name { get; set; }
-            [JsonProperty("namespace")]
-            public string Namespace { get; set; }
-            [JsonProperty("version")]
-            public decimal Version { get; set; }
-            [JsonProperty("description")]
-            public string Description { get; set; }
-            [JsonProperty("group")]
-            public string Group { get; set; }
-        }
-        public class FormList
-        {
-            [JsonProperty("forms")]
-            public List<Forms> forms { get; set; }
-        }
-
-
-        public class FormData
+        foreach (DataRow row in dtForms.Rows)
         {
 
-            [JsonProperty("identifier")]
-            public string Identifier { get; set; }
-
-            [JsonProperty("title")]
-            public string Title { get; set; }
-
-            [JsonProperty("autoidentifier")]
-            public bool AutoIdentifier { get; set; }
-
-            [JsonProperty("options")]
-            public List<DropDownList> Options { get; set; }
-
-            [JsonProperty("type")]
-            public string Type { get; set; }
-
-            [JsonProperty("hint")]
-            public string Hint { get; set; }
-
-            [JsonProperty("required_rule")]
-            public string R_Rule { get; set; }
-
-            [JsonProperty("text")]
-            public string Text { get; set; }
-
-            [JsonProperty("visible_rule")]
-            public string V_Rule { get; set; }
-
-            [JsonProperty("visible_expr")]
-            public string Visible_Expression { get; set; }
-
-            [JsonProperty("customOptionIdentifier")]
-            public bool OptionIdentifier { get; set; }
-
-            [JsonProperty("auto_resolve")]
-            public bool Auto_Resolve { get; set; }
-
-            [JsonProperty("multiple")]
-            public bool Multiple { get; set; }
-
-           
-
+            m.InsertSingleRecord(row.ToBsonDocument());
         }
 
-
-
-        public class FormDataList
-        {
-            [JsonProperty("children")]
-            public List<FormData> children { get; set; }
-        }
+        dmGridView.DataSource = Forms;
+        dmGridView.DataBind();
     }
+
+    private IMongoCollection<BsonDocument> Connect()
+    {
+        MongoClient client = new MongoClient("mongodb://localhost:27017"); //Host
+        IMongoDatabase database = client.GetDatabase("MasteryPrep"); //Database
+        return database.GetCollection<BsonDocument>("DeviceMagic"); //Table
+    }
+
+
 }
-
-
-
