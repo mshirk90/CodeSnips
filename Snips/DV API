@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
+
 public class DeviceMagicAPI
 {
     static string BASE_URL = "https://www.devicemagic.com/organizations/104196";
@@ -26,6 +27,8 @@ public class DeviceMagicAPI
         return JsonConvert.DeserializeObject<JsonTranslator>(json);
     }
 
+  
+
     public List<JsonTranslator.Forms> GetList()
     {
         JsonTranslator Translator = BuildConnection(BASE_URL + "/forms.json");
@@ -35,6 +38,6 @@ public class DeviceMagicAPI
     public List<JsonTranslator.FormData> GetForm(string FormID)
     {
         JsonTranslator Translator = BuildConnection("https://www.devicemagic.com/api/forms/" + FormID + "/device_magic_database.json");
-        return Translator.children;
+        return Translator.Submissions;
     }
 }
