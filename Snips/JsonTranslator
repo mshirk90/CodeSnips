@@ -5,58 +5,155 @@ using System.Web.UI.WebControls;
 
 public class JsonTranslator
 {
-    //[JsonProperty("children")]
-    //public List<FormData> children { get; set; }
+    [JsonProperty("children")]
+    public List<FormData> children { get; set; }
 
     [JsonProperty("submissions")]
-    public List<FormData> Submissions { get; set; }
+    public List<RootObject> submissions { get; set; }
 
 
 
     public class FormData
     {
 
-        [JsonProperty("form")]
-        public List<FormInfo> Form { get; set; }
+        //[JsonProperty("form")]
+        //public List<FormInfo> Form { get; set; }
         //[JsonProperty("metadata")]
         //public string Metadata { get; set; }
-        [JsonProperty("submission")]
-        public List<SubmissionData> Submission { get; set; }
+        [JsonProperty("submissions")]
+        public List<RootObject> submission { get; set; }
 
     }
 
-    public class FormInfo
+    public class Form
     {
-
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public string id { get; set; }
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string name { get; set; }
         [JsonProperty("version")]
-        public string Version { get; set; }
-
+        public string version { get; set; }
     }
 
-    public class SubmissionData
+    public class Metadata
+    {
+        [JsonProperty("device_id")]
+        public string DeviceId { get; set; }
+        [JsonProperty("user_id")]
+        public string UserId  { get; set; }
+        [JsonProperty("username")]
+        public string Username  { get; set; }
+        [JsonProperty("submitted_at")]
+        public string SubmittedAt { get; set; }
+        [JsonProperty("received_at")]
+        public string ReceivedAt { get; set; }
+        [JsonProperty("submission_id")]
+        public string SubmissionId { get; set; }
+        [JsonProperty("device_submission_identifier")]
+        public string DeviceSubmissionIdentifier { get; set; }
+        [JsonProperty("form_name")]
+        public string FormName  { get; set; }
+        [JsonProperty("form_namespace")]
+        public string FormNamespace { get; set; }
+        [JsonProperty("form_version")]
+        public string FormVersion { get; set; }
+    }
+
+
+    public class Submission2
     {
         [JsonProperty("What_was_completed_in_class_today_")]
-        public List<QuestionData> Agenda { get; set; }
+        public string WhatWasCompletedInClassToday { get; set; }
         [JsonProperty("Which_subject_did_you_teach_today_")]
-        public List<QuestionData> Subject { get; set; }
+        public string WhichSubjectDidYouTeachToday  { get; set; }
         [JsonProperty("Which_Lesson_did_you_teach_today_")]
-        public List<QuestionData> Lesson { get; set; }
-  
+        public string WhichLessonDidYouTeachToday { get; set; }
+        [JsonProperty("Jaylen_Andrews")]
+        public string  JaylenAndrews  { get; set; }
+        [JsonProperty("Andrew_Burgess")]
+        public string AndrewBurgess  { get; set; }
+        [JsonProperty("Madison_Deane")]
+        public string MadisonDeane  { get; set; }
+        [JsonProperty("Sarah_Fontenot")]
+        public string SarahFontenot  { get; set; }
+        [JsonProperty("Cheri_Hall")]
+        public string CheriHall  { get; set; }
+        [JsonProperty("Micah_Horton")]
+        public string MicahHorton  { get; set; }
+        [JsonProperty("Coleman_Perkins")]
+        public string ColemanPerkins  { get; set; }
+        [JsonProperty("Abren_Prestridge")]
+        public string AbrenPrestridge  { get; set; }
+        [JsonProperty("Olivia_Williams")]
+        public string OliviaWilliams  { get; set; }
+        [JsonProperty("Zachary_Winters")]
+        public string ZacharyWinters  { get; set; }
+        [JsonProperty("Alyssa_Ybarra")]
+        public string AlyssaYbarra { get; set; }
+        [JsonProperty("Are_there_any_students_not_listed_above_")]
+        public string AreThereAnyStudentsNotListedAbove  { get; set; }
+        [JsonProperty("What_did_you_review_today_")]
+        public string WhatDidYouReviewToday { get; set; }
+        [JsonProperty("Which_Lesson_did_you_teach_today__copy_copy")]
+        public string WhichLessonDidYouTeachTodayCopyCopy{ get; set; }
+        [JsonProperty("Notes_Comments_")]
+        public string NotesComments  { get; set; }
+        [JsonProperty("Exit_Ticket")]
+        public string ExitTicket  { get; set; }
+        [JsonProperty("Which_Lesson_did_you_teach_today__copy_copy_copy")]
+        public string WhichLessonDidYouTeachTodayCopyCopyCopy  { get; set; }
+        [JsonProperty("What_took_place_today_")]
+        public string WhatTookPlaceToday  { get; set; }
     }
 
-    public class QuestionData
+    public class Submissions
     {
-        [JsonProperty("value")]
-        public int Value { get; set; }
-        [JsonProperty("type")]
-        public string Type { get; set; }      
+        [JsonProperty("form")]
+        public Form form { get; set; }
+        [JsonProperty("metadata")]
+        public Metadata metadata { get; set; }
+        [JsonProperty("submission")]
+        public Submission2 submission { get; set; }
     }
 
-    
+    public class RootObject
+    {
+        [JsonProperty("per_page")]
+        public string per_page { get; set; }
+        [JsonProperty("current_page")]
+        public string current_page { get; set; }
+        [JsonProperty("total_pages")]
+        public string total_pages { get; set; }
+        [JsonProperty("current_count")]
+        public string current_count { get; set; }
+        [JsonProperty("total_count")]
+        public string total_count { get; set; }
+        [JsonProperty("submissions")]
+        public List<Submissions> submissions { get; set; }
+    }
+
+
+    public DataTable dtRoot()
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("per_page");
+        dt.Columns.Add("current_page");
+        dt.Columns.Add("total_pages");
+        dt.Columns.Add("current_count");
+        dt.Columns.Add("total_count");
+        dt.Columns.Add("submissions");
+
+
+        return dt;
+    }
+
+
+
+
+    //*********************************************************************************************************************************************************************
+
+
+
 
 
     [JsonProperty("forms")]
