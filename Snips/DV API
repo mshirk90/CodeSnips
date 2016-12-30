@@ -35,9 +35,9 @@ public class DeviceMagicAPI
         return Translator.forms;
     }
 
-    public List<JsonTranslator.FormData> GetForm(string FormID)
+    public List<JsonTranslator.RootObject> GetForm(string FormID)
     {
         JsonTranslator Translator = BuildConnection("https://www.devicemagic.com/api/forms/" + FormID + "/device_magic_database.json");
-        return Translator.Submissions;
+        return Translator.submissions;
     }
 }
