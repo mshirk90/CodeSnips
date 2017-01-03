@@ -5,24 +5,17 @@ using System.Web.UI.WebControls;
 
 public class JsonTranslator
 {
-    [JsonProperty("children")]
-    public List<FormData> children { get; set; }
-
     [JsonProperty("submissions")]
-    public List<RootObject> submissions { get; set; }
+    public List<Submissions> submissions { get; set; }
 
 
 
-    public class FormData
+    public class DeviceData
     {
-
-        //[JsonProperty("form")]
-        //public List<FormInfo> Form { get; set; }
-        //[JsonProperty("metadata")]
-        //public string Metadata { get; set; }
-        [JsonProperty("submissions")]
-        public List<RootObject> submission { get; set; }
-
+       [JsonProperty("value")]
+       public string Value { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
     }
 
     public class Form
@@ -38,82 +31,82 @@ public class JsonTranslator
     public class Metadata
     {
         [JsonProperty("device_id")]
-        public string DeviceId { get; set; }
+        public List<DeviceData> DeviceId { get; set; }
         [JsonProperty("user_id")]
-        public string UserId  { get; set; }
+        public List<DeviceData> UserId  { get; set; }
         [JsonProperty("username")]
-        public string Username  { get; set; }
+        public List<DeviceData> Username  { get; set; }
         [JsonProperty("submitted_at")]
-        public string SubmittedAt { get; set; }
+        public List<DeviceData> SubmittedAt { get; set; }
         [JsonProperty("received_at")]
-        public string ReceivedAt { get; set; }
+        public List<DeviceData> ReceivedAt { get; set; }
         [JsonProperty("submission_id")]
-        public string SubmissionId { get; set; }
+        public List<DeviceData> SubmissionId { get; set; }
         [JsonProperty("device_submission_identifier")]
-        public string DeviceSubmissionIdentifier { get; set; }
+        public List<DeviceData> DeviceSubmissionIdentifier { get; set; }
         [JsonProperty("form_name")]
-        public string FormName  { get; set; }
+        public List<DeviceData> FormName  { get; set; }
         [JsonProperty("form_namespace")]
-        public string FormNamespace { get; set; }
+        public List<DeviceData> FormNamespace { get; set; }
         [JsonProperty("form_version")]
-        public string FormVersion { get; set; }
+        public List<DeviceData> FormVersion { get; set; }
     }
 
 
     public class Submission2
     {
         [JsonProperty("What_was_completed_in_class_today_")]
-        public string WhatWasCompletedInClassToday { get; set; }
+        public List<DeviceData> WhatWasCompletedInClassToday { get; set; }
         [JsonProperty("Which_subject_did_you_teach_today_")]
-        public string WhichSubjectDidYouTeachToday  { get; set; }
+        public List<DeviceData> WhichSubjectDidYouTeachToday  { get; set; }
         [JsonProperty("Which_Lesson_did_you_teach_today_")]
-        public string WhichLessonDidYouTeachToday { get; set; }
+        public List<DeviceData> WhichLessonDidYouTeachToday { get; set; }
         [JsonProperty("Jaylen_Andrews")]
-        public string  JaylenAndrews  { get; set; }
+        public List<DeviceData> JaylenAndrews  { get; set; }
         [JsonProperty("Andrew_Burgess")]
-        public string AndrewBurgess  { get; set; }
+        public List<DeviceData> AndrewBurgess  { get; set; }
         [JsonProperty("Madison_Deane")]
-        public string MadisonDeane  { get; set; }
+        public List<DeviceData> MadisonDeane  { get; set; }
         [JsonProperty("Sarah_Fontenot")]
-        public string SarahFontenot  { get; set; }
+        public List<DeviceData> SarahFontenot  { get; set; }
         [JsonProperty("Cheri_Hall")]
-        public string CheriHall  { get; set; }
+        public List<DeviceData> CheriHall  { get; set; }
         [JsonProperty("Micah_Horton")]
-        public string MicahHorton  { get; set; }
+        public List<DeviceData> MicahHorton  { get; set; }
         [JsonProperty("Coleman_Perkins")]
-        public string ColemanPerkins  { get; set; }
+        public List<DeviceData> ColemanPerkins  { get; set; }
         [JsonProperty("Abren_Prestridge")]
-        public string AbrenPrestridge  { get; set; }
+        public List<DeviceData> AbrenPrestridge  { get; set; }
         [JsonProperty("Olivia_Williams")]
-        public string OliviaWilliams  { get; set; }
+        public List<DeviceData> OliviaWilliams  { get; set; }
         [JsonProperty("Zachary_Winters")]
-        public string ZacharyWinters  { get; set; }
+        public List<DeviceData> ZacharyWinters  { get; set; }
         [JsonProperty("Alyssa_Ybarra")]
-        public string AlyssaYbarra { get; set; }
+        public List<DeviceData> AlyssaYbarra { get; set; }
         [JsonProperty("Are_there_any_students_not_listed_above_")]
-        public string AreThereAnyStudentsNotListedAbove  { get; set; }
+        public List<DeviceData> AreThereAnyStudentsNotListedAbove  { get; set; }
         [JsonProperty("What_did_you_review_today_")]
-        public string WhatDidYouReviewToday { get; set; }
+        public List<DeviceData> WhatDidYouReviewToday { get; set; }
         [JsonProperty("Which_Lesson_did_you_teach_today__copy_copy")]
-        public string WhichLessonDidYouTeachTodayCopyCopy{ get; set; }
+        public List<DeviceData> WhichLessonDidYouTeachTodayCopyCopy { get; set; }
         [JsonProperty("Notes_Comments_")]
-        public string NotesComments  { get; set; }
+        public List<DeviceData> NotesComments  { get; set; }
         [JsonProperty("Exit_Ticket")]
-        public string ExitTicket  { get; set; }
+        public List<DeviceData> ExitTicket  { get; set; }
         [JsonProperty("Which_Lesson_did_you_teach_today__copy_copy_copy")]
-        public string WhichLessonDidYouTeachTodayCopyCopyCopy  { get; set; }
+        public List<DeviceData> WhichLessonDidYouTeachTodayCopyCopyCopy  { get; set; }
         [JsonProperty("What_took_place_today_")]
-        public string WhatTookPlaceToday  { get; set; }
+        public List<DeviceData> WhatTookPlaceToday  { get; set; }
     }
 
     public class Submissions
     {
         [JsonProperty("form")]
-        public Form form { get; set; }
+        public List<Form> form { get; set; }
         [JsonProperty("metadata")]
-        public Metadata metadata { get; set; }
+        public List<Metadata> metadata { get; set; }
         [JsonProperty("submission")]
-        public Submission2 submission { get; set; }
+        public List<Submission2> submission { get; set; }
     }
 
     public class RootObject
@@ -132,20 +125,6 @@ public class JsonTranslator
         public List<Submissions> submissions { get; set; }
     }
 
-
-    public DataTable dtRoot()
-    {
-        DataTable dt = new DataTable();
-        dt.Columns.Add("per_page");
-        dt.Columns.Add("current_page");
-        dt.Columns.Add("total_pages");
-        dt.Columns.Add("current_count");
-        dt.Columns.Add("total_count");
-        dt.Columns.Add("submissions");
-
-
-        return dt;
-    }
 
 
 
