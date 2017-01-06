@@ -1,13 +1,11 @@
 using System;
-using MongoDB.Bson;
 using System.Collections.Generic;
 using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Data;
-using System.Net;
-using System.Text;
-using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 public partial class _Default : System.Web.UI.Page
 {
@@ -15,149 +13,91 @@ public partial class _Default : System.Web.UI.Page
     JsonTranslator Translator = new JsonTranslator();
     DeviceMagicAPI DVAPI = new DeviceMagicAPI();
 
-    //MongoExtension ME = new MongoExtension();
 
     public void Page_Load(object sender, EventArgs e)
     {
-        IMongoCollection<BsonDocument> Collection = Connect();
        
-        Collection.Database.DropCollection("DeviceMagic");
-        Collection.Database.CreateCollection("DeviceMagic");        
     }
 
-  
-    protected void btnForm_Click(object sender, EventArgs e)
-    {
-        DVAPI = new DeviceMagicAPI();
-        //List<JsonTranslator.FormData> Forms = DVAPI.GetForm(txtQuery.Text);
-
-        //dmGridView.DataSource = Forms;
-                       dmGridView.DataBind();
-
-    }
-
-
-
-    
-
-
-    protected void btnTEST_Click1(object sender, EventArgs e)
-    {
-
-        m = new Mongo();
-        //Grab all form data
-        DVAPI = new DeviceMagicAPI();
-        List<JsonTranslator.RootObject> RootO = DVAPI.GetForm(txtQuery.Text);
-
-
-
-
-        Translator = new JsonTranslator();
-        DataTable dtRoot = Translator.dtRoot();
-
-        foreach (JsonTranslator.RootObject Rooto in RootO)
-        {
-
-
-            if (Rooto.submissions != null)
-            {
-                DataRow dr = dtRoot.NewRow();
-                dr["per_page"] = Rooto.per_page;
-                dr["current_page"] = Rooto.current_page;
-                dr["total_pages"] = Rooto.total_pages;
-                dr["current_count"] = Rooto.current_count;
-                dr["total_count"] = Rooto.total_count;
-                dr["submissions"] = Rooto.submissions;
-
-
-                dtRoot.Rows.Add(dr);
-            }
-        }
-
-        foreach (DataRow row in dtRoot.Rows)
-        {
-
-            m.InsertSingleRecord(row.ToBsonDocument());
-        }
-
-        dmGridView.DataSource = RootO;
-        dmGridView.DataBind();
-
-
-
-        //**********************************************************************************************************************************************
-
-        //string BASE_URL = "https://www.devicemagic.com/api/forms/";
-        //string USER_NAME = "3vbYNVjphf1_5wJeFsHt";
-        //string PASSWORD = "x";
-        //m = new Mongo();
-
-        //HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(BASE_URL + txtQuery.Text + "/device_magic_database.json");
-        //string authInfo = USER_NAME + ":" + PASSWORD;
-        //authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-        //req.Headers["Authorization"] = "Basic " + authInfo;
-
-        //HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-        //Stream s = response.GetResponseStream();
-
-        //string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
-        //JObject jsonO = JObject.Parse(json);
-        //List<JsonTranslator.Submissions> bob =  JsonConvert.DeserializeObject<List<JsonTranslator.Submissions>>(json);
-        ////lblDeviceMagic.Text = json.ToString();
-
-        //dmGridView.DataSource = bob.ToString();
-        //dmGridView.DataBind();
-        //m.InsertSingleRecord(bob.ToBsonDocument());
-
-    }
-
-    protected void btnTEST2_Click(object sender, EventArgs e)
+    private void LoadFormList()
     {
         m = new Mongo();
-        //Grab all form data
         DVAPI = new DeviceMagicAPI();
+
+        IMongoCollection<BsonDocument> Collection = Connect(); //Connect to Mongo
+        string jsonList = DVAPI.GetFormList(""); //Pull form data from Device Magic
+
+
+        try //Insert current data into Mongo
+        {
+            
+            var jsonReader2 = new MongoDB.Bson.IO.JsonReader(jsonList);
+            
+                var context2 = BsonDeserializationContext.CreateRoot(jsonReader2);
+                var documentList = Collection.DocumentSerializer.Deserialize(context2);
+
+            m.InsertSingleRecord(documentList); // Insert doc into mongo
+
+            lblDeviceMagic.Text = "Data Successfully Added"; //User validation
+        }
+        catch (Exception ex) 
+        {
+            lblDeviceMagic.Text = "Error Importing Data  ->" + ex;
+        }        
+
         List<JsonTranslator.Forms> Forms = DVAPI.GetList();
-         
+        //dmGridView.DataSource = Forms;
+        //dmGridView.DataBind();
+    }
+
+    private void LoadForms(string formID)
+    {
+        m = new Mongo();
+        DVAPI = new DeviceMagicAPI();
+
+        IMongoCollection<BsonDocument> Collection = Connect(); //Connect to Mongo
+        string jsonForm = DVAPI.GetJson(formID.ToString()); //Pull form data from Device Magic
         
-
-
-        Translator = new JsonTranslator();
-        DataTable dtForms = Translator.dtForms();
-
-        // remove all documents in the "stickynotes" collection
-
-        //Loop through form data.  Put 'Exit Ticket' data into a datatable
-        foreach (JsonTranslator.Forms Form in Forms)
+   
+        try //Insert current data into Mongo
         {
+            var jsonReader = new MongoDB.Bson.IO.JsonReader(jsonForm);
 
+            var context = BsonDeserializationContext.CreateRoot(jsonReader);
+            var document = Collection.DocumentSerializer.Deserialize(context);
+            
+                m.InsertSingleRecord(document); // Insert forms into mongo
+           
+            
+            lblDeviceMagic.Text = "Data Successfully Added"; //User validation
+        }
+        catch (Exception ex)
+        {
+            lblDeviceMagic.Text = "Error Importing Data  ->" + ex;
+        }
+    }   
 
-            if (Form.Description.Contains("Exit Ticket"))
+    protected void btnRefreshDatabase_Click(object sender, EventArgs e)
+    {
+        IMongoCollection<BsonDocument> Collection = Connect();
+
+        Collection.Database.DropCollection("DeviceMagic");
+        Collection.Database.CreateCollection("DeviceMagic");
+
+        List<JsonTranslator.Forms> Forms = DVAPI.GetList();
+        //dmGridView.DataSource = Forms;
+        //dmGridView.DataBind();
+
+        foreach (JsonTranslator.Forms form in Forms)
+        {
+            if (form != null)
             {
-                DataRow dr = dtForms.NewRow();
-                dr["id"] = Form.ID;
-                dr["name"] = Form.Name;
-                dr["namespace"] = Form.Namespace;
-                dr["version"] = Form.Version;
-                dr["description"] = Form.Description;
-                dr["group"] = Form.Group;
 
-                dtForms.Rows.Add(dr);
-            }
+                var formID = form.ID;
+                LoadForms(formID.ToString());
+            }           
         }
-        //Loop through form datatable, pull the submittion data and put into datatable
-        //foreach (DataRow row in dtForms.Rows)
-        //{
-        //    DVAPI.GetForm(row["id"].ToString());
-        //}
-
-        foreach (DataRow row in dtForms.Rows)
-        {
-
-            m.InsertSingleRecord(row.ToBsonDocument());
-        }
-
-        dmGridView.DataSource = Forms;
-        dmGridView.DataBind();
+        LoadFormList();
     }
 
     private IMongoCollection<BsonDocument> Connect()
@@ -167,5 +107,5 @@ public partial class _Default : System.Web.UI.Page
         return database.GetCollection<BsonDocument>("DeviceMagic"); //Table
     }
 
-
 }
+
