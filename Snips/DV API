@@ -13,6 +13,47 @@ public class DeviceMagicAPI
     static string USER_NAME = "3vbYNVjphf1_5wJeFsHt";
     static string PASSWORD = "x";
 
+  
+    private string ConnectionString(string APIUrl)
+    {
+        HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(APIUrl);
+        string authInfo = USER_NAME + ":" + PASSWORD;
+        authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+        req.Headers["Authorization"] = "Basic " + authInfo;
+        
+        HttpWebResponse response;
+
+        try
+        {
+            response = req.GetResponse() as HttpWebResponse;
+        }
+        catch (WebException ex)
+        {
+            response = ex.Response as HttpWebResponse;
+        }
+        
+        string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
+        
+        return json;
+    }    
+    public string GetJson(string FormID)
+    {
+        FormID = ConnectionString("https://www.devicemagic.com/api/forms/" + FormID + "/device_magic_database.json");
+        return FormID;
+        
+    }
+    public string  GetFormList(string FormList)
+    {
+        FormList = ConnectionString(BASE_URL + "/forms.json");
+        return FormList;
+    }
+
+    public List<JsonTranslator.Forms> GetList()
+    {
+        JsonTranslator Translator = BuildConnection(BASE_URL + "/forms.json");
+        return Translator.forms;
+    }
+
     private JsonTranslator BuildConnection(string APIUrl)
     {
         HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(APIUrl);
@@ -25,19 +66,6 @@ public class DeviceMagicAPI
         string json = new StreamReader(response.GetResponseStream()).ReadToEnd();
         JObject jsonO = JObject.Parse(json);
         return JsonConvert.DeserializeObject<JsonTranslator>(json);
-    }
 
-  
-
-    public List<JsonTranslator.Forms> GetList()
-    {
-        JsonTranslator Translator = BuildConnection(BASE_URL + "/forms.json");
-        return Translator.forms;
+        }
     }
-
-    public List<JsonTranslator.RootObject> GetForm(string FormID)
-    {
-        JsonTranslator Translator = BuildConnection("https://www.devicemagic.com/api/forms/" + FormID + "/device_magic_database.json");
-        return Translator.submissions;
-    }
-}
