@@ -5,18 +5,9 @@ using System.Web.UI.WebControls;
 
 public class JsonTranslator
 {
+
     [JsonProperty("submissions")]
-    public List<Submissions> submissions { get; set; }
-
-
-
-    public class DeviceData
-    {
-       [JsonProperty("value")]
-       public string Value { get; set; }
-        [JsonProperty("type")]
-        public string Type { get; set; }
-    }
+    public List<Form> Submissions { get; set; }
 
     public class Form
     {
@@ -27,112 +18,6 @@ public class JsonTranslator
         [JsonProperty("version")]
         public string version { get; set; }
     }
-
-    public class Metadata
-    {
-        [JsonProperty("device_id")]
-        public List<DeviceData> DeviceId { get; set; }
-        [JsonProperty("user_id")]
-        public List<DeviceData> UserId  { get; set; }
-        [JsonProperty("username")]
-        public List<DeviceData> Username  { get; set; }
-        [JsonProperty("submitted_at")]
-        public List<DeviceData> SubmittedAt { get; set; }
-        [JsonProperty("received_at")]
-        public List<DeviceData> ReceivedAt { get; set; }
-        [JsonProperty("submission_id")]
-        public List<DeviceData> SubmissionId { get; set; }
-        [JsonProperty("device_submission_identifier")]
-        public List<DeviceData> DeviceSubmissionIdentifier { get; set; }
-        [JsonProperty("form_name")]
-        public List<DeviceData> FormName  { get; set; }
-        [JsonProperty("form_namespace")]
-        public List<DeviceData> FormNamespace { get; set; }
-        [JsonProperty("form_version")]
-        public List<DeviceData> FormVersion { get; set; }
-    }
-
-
-    public class Submission2
-    {
-        [JsonProperty("What_was_completed_in_class_today_")]
-        public List<DeviceData> WhatWasCompletedInClassToday { get; set; }
-        [JsonProperty("Which_subject_did_you_teach_today_")]
-        public List<DeviceData> WhichSubjectDidYouTeachToday  { get; set; }
-        [JsonProperty("Which_Lesson_did_you_teach_today_")]
-        public List<DeviceData> WhichLessonDidYouTeachToday { get; set; }
-        [JsonProperty("Jaylen_Andrews")]
-        public List<DeviceData> JaylenAndrews  { get; set; }
-        [JsonProperty("Andrew_Burgess")]
-        public List<DeviceData> AndrewBurgess  { get; set; }
-        [JsonProperty("Madison_Deane")]
-        public List<DeviceData> MadisonDeane  { get; set; }
-        [JsonProperty("Sarah_Fontenot")]
-        public List<DeviceData> SarahFontenot  { get; set; }
-        [JsonProperty("Cheri_Hall")]
-        public List<DeviceData> CheriHall  { get; set; }
-        [JsonProperty("Micah_Horton")]
-        public List<DeviceData> MicahHorton  { get; set; }
-        [JsonProperty("Coleman_Perkins")]
-        public List<DeviceData> ColemanPerkins  { get; set; }
-        [JsonProperty("Abren_Prestridge")]
-        public List<DeviceData> AbrenPrestridge  { get; set; }
-        [JsonProperty("Olivia_Williams")]
-        public List<DeviceData> OliviaWilliams  { get; set; }
-        [JsonProperty("Zachary_Winters")]
-        public List<DeviceData> ZacharyWinters  { get; set; }
-        [JsonProperty("Alyssa_Ybarra")]
-        public List<DeviceData> AlyssaYbarra { get; set; }
-        [JsonProperty("Are_there_any_students_not_listed_above_")]
-        public List<DeviceData> AreThereAnyStudentsNotListedAbove  { get; set; }
-        [JsonProperty("What_did_you_review_today_")]
-        public List<DeviceData> WhatDidYouReviewToday { get; set; }
-        [JsonProperty("Which_Lesson_did_you_teach_today__copy_copy")]
-        public List<DeviceData> WhichLessonDidYouTeachTodayCopyCopy { get; set; }
-        [JsonProperty("Notes_Comments_")]
-        public List<DeviceData> NotesComments  { get; set; }
-        [JsonProperty("Exit_Ticket")]
-        public List<DeviceData> ExitTicket  { get; set; }
-        [JsonProperty("Which_Lesson_did_you_teach_today__copy_copy_copy")]
-        public List<DeviceData> WhichLessonDidYouTeachTodayCopyCopyCopy  { get; set; }
-        [JsonProperty("What_took_place_today_")]
-        public List<DeviceData> WhatTookPlaceToday  { get; set; }
-    }
-
-    public class Submissions
-    {
-        [JsonProperty("form")]
-        public List<Form> form { get; set; }
-        [JsonProperty("metadata")]
-        public List<Metadata> metadata { get; set; }
-        [JsonProperty("submission")]
-        public List<Submission2> submission { get; set; }
-    }
-
-    public class RootObject
-    {
-        [JsonProperty("per_page")]
-        public string per_page { get; set; }
-        [JsonProperty("current_page")]
-        public string current_page { get; set; }
-        [JsonProperty("total_pages")]
-        public string total_pages { get; set; }
-        [JsonProperty("current_count")]
-        public string current_count { get; set; }
-        [JsonProperty("total_count")]
-        public string total_count { get; set; }
-        [JsonProperty("submissions")]
-        public List<Submissions> submissions { get; set; }
-    }
-
-
-
-
-
-    //*********************************************************************************************************************************************************************
-
-
-
 
 
     [JsonProperty("forms")]
