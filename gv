@@ -1,0 +1,12 @@
+                    <asp:GridView runat="server" ID="gvList" DataKeyNames="UserID"
+            OnSorting="gvList_Sorting"
+            OnPageIndexChanging="gvList_PageIndexChanging"
+            OnRowCommand="gvList_RowCommand">
+            <Columns>
+                <asp:ButtonField ButtonType="Link" DataTextField="FullName" HeaderText="Full Name" CommandName="Select" SortExpression="FullName" />
+                <asp:BoundField DataField="Address" HeaderText="Email" SortExpression="Email" /> 
+		        <asp:BoundField DataField="Suite" HeaderText="Date of Birth" SortExpression="DOB" DataFormatString="{0:d}" HeaderStyle-CssClass="TextCenter" ItemStyle-CssClass="TextCenter"/>
+                <asp:BoundField DataField="City" HeaderText="Role" SortExpression="RoleName" />
+                <asp:CheckBoxField DataField="StateCode" HeaderText="Inactive" SortExpression="Inactive" HeaderStyle-CssClass="TextCenter" ItemStyle-CssClass="TextCenter" />
+            </Columns>
+         </asp:GridView> 
