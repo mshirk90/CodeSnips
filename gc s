@@ -1,0 +1,74 @@
+   protected void FillList(GridViewSortEventArgs SortArgs = null, GridViewPageEventArgs PagerArgs = null)
+    {
+        Util.SetGridView(gvList, dtList(), SortArgs, PagerArgs);
+    }
+
+    protected void gvList_Sorting(Object sender, GridViewSortEventArgs e)
+    {
+        FillList(e);
+    }
+
+    protected void gvList_PageIndexChanging(Object sender, GridViewPageEventArgs e)
+    {
+        FillList(null, e);
+    }
+
+    protected void gvList_RowCommand(Object sender, GridViewCommandEventArgs e)
+    {
+        switch (e.CommandName)
+        {
+            case "Select":
+                int index = Convert.ToInt32(e.CommandArgument);
+                string ID = gvList.DataKeys[index].Value.ToString();
+
+                FillDetails(ID);
+                SwitchFormMode(Util.FormMode.Edit);
+                break;
+        }
+    }
+    
+    protected void FillDetails(string ID)
+    {
+        Util.PopulatePanelControls(pnlDetails, dtDetails(ID), true);
+        Util.LoadList(RoleID, null, null, null, ID, "RoleID");
+
+        ctrlUserPlace.SetUserID(ID);
+        ctrlUserPlace.FillList();
+        ctrlUserPlace.SwitchFormMode(Util.FormMode.List);
+
+        ctrlUserPhone.SetUserID(ID);
+        ctrlUserPhone.FillList();
+        ctrlUserPhone.SwitchFormMode(Util.FormMode.List);
+
+        ctrlUserLicense.SetUserID(ID);
+        ctrlUserLicense.FillList();
+        ctrlUserLicense.SwitchFormMode(Util.FormMode.List);
+
+        ctrlUserCE.SetUserID(ID);
+        ctrlUserCE.FillList();
+        ctrlUserCE.SwitchFormMode(Util.FormMode.List);
+
+        ctrlUserDisciplinaryAction.SetUserID(ID);
+        ctrlUserDisciplinaryAction.FillList();
+        ctrlUserDisciplinaryAction.SwitchFormMode(Util.FormMode.List);
+
+        ctrlUserNote.SetUserID(ID);
+        ctrlUserNote.FillList();
+        ctrlUserNote.SwitchFormMode(Util.FormMode.List);
+
+
+        //ctrlUserLicenseRenewal.SetUserID(ID);
+        //ctrlUserLicenseRenewal.FillList();
+        //ctrlUserLicenseRenewal.SwitchFormMode(Util.FormMode.List);
+
+        //ctrlDocumentList.SetUserID(ID);
+        ctrlDocumentList.SetFK_RecordID(ID);
+        ctrlDocumentList.FillList();
+        //ctrlDocumentList.SwitchFormMode(Util.FormMode.List);
+
+        UserCustomField ucf = new UserCustomField();
+        ucf.UserID = UserID.Text;
+        DataTable dt2 = ucf.Search();
+        rpCustomFields.DataSource = dt2;
+        rpCustomFields.DataBind();
+    }
